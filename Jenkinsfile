@@ -1,13 +1,13 @@
 #!/usr/bin/env groovy
 
 pipeline {
-    agent any 
+    agent { dockerfile true }
 
     stages {
         stage('Build Docker Image') {
             steps {
                 script {
-                    dockerImage = docker.build('node-alpine')
+                    dockerImage = docker.build('test-demo')
                 }
             }
         }
