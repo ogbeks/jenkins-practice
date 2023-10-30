@@ -1,27 +1,27 @@
 #!/usr/bin/env groovy
 
 pipeline {
-        agent any 
-        stages {
-            stage('Build Docker Image') {
-                steps {
-                    script {
-                        docker.build("node-alpine:latest")
-                    }
+    agent any 
+
+    stages {
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    dockerImage = docker.build('node-alpine')
                 }
             }
-            stage('Push Docker Image') {
-                steps {
-                    script {
-                        withCredentials([usernamePassword(credentialsId: 'DockerHubCreds', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-                            sh "docker login -u ${USERNAME} -p ${PASSWORD}"
-                            sh "docker push node-alpine:latest"
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                        docker.withRegistry('https://hub.docker.com/', "${USERNAME}:${PASSWORD}") {
+                            dockerImage.push()
                         }
                     }
                 }
-
+            }
         }
     }
-
 }
-
