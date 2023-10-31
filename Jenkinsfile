@@ -6,8 +6,10 @@ pipeline {
     stages {
         stage('Build Docker Image') {
             steps {
+                // git credentialsId: 'github-login', url: 'https://github.com/ogbeks/jenkins-practice.git'
+                // sh "ls"
                 script {
-                    dockerImage = docker.build('test-demo')
+                    dockerImage = docker.build('node:12')
                 }
             }
         }
